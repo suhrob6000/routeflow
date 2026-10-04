@@ -3,9 +3,19 @@ import { filterNodes } from '../enhance';
 
 describe('node search', () => {
   function fixture() {
-    const nodes = ['Германия · Frankfurt · VLESS', 'Финляндия · Helsinki · Trojan', 'Россия · Direct'].map((textContent) => ({
-      textContent, hidden: false,
-      classList: { toggle(_className: string, hidden: boolean) { nodes.find((node) => node.textContent === textContent)!.hidden = hidden; } },
+    const nodes = [
+      'Германия · Frankfurt · VLESS',
+      'Финляндия · Helsinki · Trojan',
+      'Россия · Direct',
+    ].map((textContent) => ({
+      textContent,
+      hidden: false,
+      classList: {
+        toggle(_className: string, hidden: boolean) {
+          nodes.find((node) => node.textContent === textContent)!.hidden =
+            hidden;
+        },
+      },
     }));
     const root = { querySelectorAll: () => nodes } as unknown as ParentNode;
     return { root, nodes };
