@@ -58,4 +58,8 @@ jobs:
         run: |
           # Contract tests compare against the original Forkop stable release.
           git fetch https://github.com/ushan0v/forkop.git refs/tags/0.7.19.9:refs/tags/0.7.19.9
-          printf '%s\0' tests/*.sh | xargs -0 -n1 -P4 bash
+          # Runtime suites exercise process cleanup; run them without shared-process races.
+          for test_file in tests/*.sh; do
+            printf 'Testing %s\n' "$test_file"
+            bash "$test_file"
+          done
