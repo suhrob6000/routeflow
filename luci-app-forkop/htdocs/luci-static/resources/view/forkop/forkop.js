@@ -478,6 +478,14 @@ const EntryPoint = {
     };
     updates.createUpdatesContent(updatesSection);
 
+    // LuCI reuses the map root but replaces its contents after Save/Reset.
+    const originalRenderContents = forkopMap.renderContents;
+    forkopMap.renderContents = async function () {
+      const node = await originalRenderContents.apply(this, arguments);
+      main.enhanceRouteflow(node, () => main.createSupportReport(main.store.get()));
+      return node;
+    };
+
     await loadUiCapabilities().catch(() => null);
 
     const rendered = await forkopMap.render();

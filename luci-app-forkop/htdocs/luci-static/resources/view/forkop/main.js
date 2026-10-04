@@ -1987,6 +1987,8 @@ function renderDefaultState({
       "div",
       {
         class: className,
+        "data-rf-key": JSON.stringify([section.code, outbound.code]),
+        "data-rf-latency": outbound.latency || "",
         "aria-busy": outboundSwitching ? "true" : void 0,
         "aria-disabled": section.withTagSelect && !canChooseOutbound ? "true" : void 0,
         click: () => canChooseOutbound && onChooseOutbound(section.sectionName, section.code, outbound.code)
@@ -13942,6 +13944,83 @@ var UpdatesTab = {
   styles: styles6
 };
 
+// src/routeflow/styles.ts
+var RouteflowStyles = `
+.rf-shell {
+ --rf-bg:#f3f6fa; --rf-card:#fff; --rf-ink:#17243c; --rf-muted:#65748b;
+ --rf-line:#e1e7ef; --rf-accent:#087f8c; --rf-soft:#e6f5f4; --rf-space:20px;
+ --background-color-low:var(--rf-line); --text-color-high:var(--rf-ink);
+ --text-color-medium:var(--rf-muted); --primary-color-high:var(--rf-accent);
+ --success-color-medium:#16825d; --error-color-medium:#d34455;
+ color:var(--rf-ink); background:var(--rf-bg); padding:24px;
+ border-radius:24px; font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+.rf-shell[data-rf-theme="dark"] {
+ --rf-bg:#101827; --rf-card:#192437; --rf-ink:#edf3fc; --rf-muted:#a2b2c9;
+ --rf-line:#304057; --rf-accent:#54d4cb; --rf-soft:#203c43;
+ --success-color-medium:#62d5a5; --error-color-medium:#ff8290; color-scheme:dark;
+}
+.rf-shell[data-rf-density="compact"] { --rf-space:12px; }
+.rf-toolbar { display:flex; gap:20px; align-items:center; justify-content:space-between;
+ padding-bottom:24px; margin-bottom:20px; border-bottom:1px solid var(--rf-line); }
+.rf-brand {display:flex; align-items:center; gap:14px;}
+.rf-mark { width:44px; height:44px; display:grid; place-items:center; border-radius:14px;
+ background:var(--rf-accent);color:var(--rf-card);font-size:25px;font-weight:800; }
+.rf-brand strong {display:block;font-size:24px;letter-spacing:-1px;line-height:1.3;}
+.rf-brand small {color:var(--rf-muted);font-size:12px;}
+.rf-controls {display:flex;flex-wrap:wrap;gap:8px;}
+.rf-shell .rf-control { border:1px solid var(--rf-line); background:var(--rf-card);
+ color:var(--rf-ink); border-radius:10px;padding:10px 14px;cursor:pointer;min-height:42px; }
+.rf-shell .rf-control[aria-pressed="true"] {background:var(--rf-soft);border-color:var(--rf-accent);}
+.rf-shell :is(button,input,select,a):focus-visible {outline:3px solid var(--rf-accent);outline-offset:3px;}
+.rf-shell h2 {font-size:18px;color:var(--rf-muted);font-weight:500;}
+.rf-shell .cbi-map-descr {color:var(--rf-muted);}
+.rf-shell .cbi-tabmenu {display:flex;flex-wrap:wrap;gap:6px;border:0;padding:8px 0;}
+.rf-shell .cbi-tabmenu li {border:0;background:transparent;border-radius:10px;}
+.rf-shell .cbi-tabmenu li a {color:var(--rf-muted);padding:10px 16px;display:block;}
+.rf-shell .cbi-tabmenu .cbi-tab {background:var(--rf-soft);}
+.rf-shell .cbi-tabmenu .cbi-tab a {color:var(--rf-accent);font-weight:700;}
+.rf-shell .fkp_dashboard-page__widgets-section {gap:14px;margin-top:18px;}
+.rf-shell :is(.fkp_dashboard-page__widgets-section__item,.fkp_dashboard-page__outbound-section) {
+ background:var(--rf-card);border:1px solid var(--rf-line);border-radius:18px;padding:var(--rf-space);
+ box-shadow:0 4px 20px #00000004;
+}
+.rf-shell .fkp_dashboard-page__widgets-section__item__title {font-weight:700;margin-bottom:14px;font-size:14px;}
+.rf-shell .fkp_dashboard-page__widgets-section__item__row {display:flex;justify-content:space-between;gap:10px;padding:5px 0;}
+.rf-shell .fkp_dashboard-page__widgets-section__item__row__key {color:var(--rf-muted);}
+.rf-shell .fkp_dashboard-page__widgets-section__item__row__value {font-variant-numeric:tabular-nums;font-weight:600;}
+.rf-shell .fkp_dashboard-page__outbound-section {margin-top:18px;}
+.rf-shell .fkp_dashboard-page__outbound-section__title-section {margin-bottom:16px;flex-wrap:wrap;}
+.rf-shell .fkp_dashboard-page__outbound-section__title-section__title {font-size:18px;letter-spacing:-.4px;}
+.rf-shell .fkp_dashboard-page__outbound-grid {gap:12px;}
+.rf-shell .fkp_dashboard-page__outbound-grid__item {padding:var(--rf-space);border:1px solid var(--rf-line);border-radius:14px;background:var(--rf-card);}
+.rf-shell .fkp_dashboard-page__outbound-grid__item--active {border:2px solid var(--rf-accent);background:var(--rf-soft);}
+.rf-shell .fkp_dashboard-page__outbound-grid__item--selectable:hover {border-color:var(--rf-accent);box-shadow:0 4px 16px #087f8c12;}
+.rf-shell .fkp_dashboard-page__outbound-grid__item__type {color:var(--rf-muted);font-size:12px;}
+.rf-shell .fkp_dashboard-page__outbound-grid__item__latency {font-variant-numeric:tabular-nums;}
+.rf-shell .btn {border-radius:9px;box-shadow:none;}
+.rf-shell .rf-search {margin:18px 0 6px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
+.rf-shell .rf-search input {box-sizing:border-box;width:min(100%,360px);padding:12px 16px;
+ border:1px solid var(--rf-line);background:var(--rf-card);color:var(--rf-ink);border-radius:12px;font:inherit;}
+.rf-shell .rf-search span {color:var(--rf-muted);font-size:13px;}
+.rf-shell .rf-search-hidden {display:none !important;}
+.rf-shell .rf-favorite {display:block;margin-top:12px;padding:4px 10px;border:1px solid var(--rf-line);
+ border-radius:8px;background:var(--rf-card);color:var(--rf-muted);font-size:20px;cursor:pointer;min-height:36px;}
+.rf-shell .rf-favorite[aria-pressed="true"] {color:var(--rf-accent);background:var(--rf-soft);}
+.rf-shell .cbi-value {padding-top:10px;padding-bottom:10px;}
+.rf-shell .cbi-value-description {color:var(--rf-muted);}
+@media(max-width:700px) {
+ .rf-shell {padding:14px;border-radius:16px;}
+ .rf-toolbar {align-items:flex-start;flex-direction:column;gap:14px;padding-bottom:18px;}
+ .rf-controls {width:100%;} .rf-controls button {flex:1;}
+ .rf-shell .fkp_dashboard-page__outbound-section__title-section__actions {flex-wrap:wrap;justify-content:flex-start;}
+ .rf-shell .fkp_dashboard-page .btn.fkp_dashboard-page__outbound-grid__item__copy-button {min-width:36px;min-height:36px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .rf-shell *, .rf-shell *::before, .rf-shell *::after {transition:none !important;animation:none !important;}
+}
+`;
+
 // src/styles.ts
 var GlobalStyles = `
 ${DashboardTab.styles}
@@ -14100,6 +14179,7 @@ ${PartialStyles}
     opacity: 1;
     transform: translateY(0);
 }
+${RouteflowStyles}
 `;
 
 // src/helpers/injectGlobalStyles.ts
@@ -14116,6 +14196,215 @@ function injectGlobalStyles() {
         </style>
     `
   );
+}
+
+// src/routeflow/enhance.ts
+var nodeSelector = ".fkp_dashboard-page__outbound-grid__item";
+var storageKey = "routeflow.preferences.v1";
+var cleanupHandlers = /* @__PURE__ */ new WeakMap();
+function filterNodes(root, query) {
+  const needle = query.trim().toLocaleLowerCase();
+  let visible = 0;
+  root.querySelectorAll(nodeSelector).forEach((node) => {
+    const match = (node.textContent ?? "").toLocaleLowerCase().includes(needle);
+    node.classList.toggle("rf-search-hidden", !match);
+    if (match) visible++;
+  });
+  return visible;
+}
+function enhanceRouteflow(root, getReport) {
+  if (root.querySelector(":scope > .rf-toolbar")) return;
+  cleanupHandlers.get(root)?.();
+  root.classList.add("rf-shell");
+  let theme = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  let compact = false;
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) ?? "null");
+    if (saved?.theme === "light" || saved?.theme === "dark") theme = saved.theme;
+    compact = saved?.compact === true;
+  } catch {
+  }
+  const toolbar = document.createElement("header");
+  toolbar.className = "rf-toolbar";
+  toolbar.innerHTML = '<div class="rf-brand"><span class="rf-mark" aria-hidden="true">\u2197</span><div><strong>Routeflow</strong><small>\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0441\u0435\u0442\u044C\u044E \xB7 \u043D\u0430 \u043E\u0441\u043D\u043E\u0432\u0435 Forkop</small></div></div><div class="rf-controls"></div>';
+  const controls = toolbar.querySelector(".rf-controls");
+  const themeButton = document.createElement("button");
+  const densityButton = document.createElement("button");
+  [themeButton, densityButton].forEach((button) => {
+    button.type = "button";
+    button.className = "rf-control";
+    controls.append(button);
+  });
+  function apply() {
+    root.dataset.rfTheme = theme;
+    root.dataset.rfDensity = compact ? "compact" : "comfortable";
+    themeButton.textContent = theme === "dark" ? "\u0421\u0432\u0435\u0442\u043B\u0430\u044F \u0442\u0435\u043C\u0430" : "\u0422\u0451\u043C\u043D\u0430\u044F \u0442\u0435\u043C\u0430";
+    themeButton.setAttribute("aria-pressed", String(theme === "dark"));
+    densityButton.textContent = "\u041A\u043E\u043C\u043F\u0430\u043A\u0442\u043D\u044B\u0439 \u0432\u0438\u0434";
+    densityButton.setAttribute("aria-pressed", String(compact));
+    try {
+      localStorage.setItem(storageKey, JSON.stringify({ theme, compact }));
+    } catch {
+    }
+  }
+  themeButton.addEventListener("click", () => {
+    theme = theme === "dark" ? "light" : "dark";
+    apply();
+  });
+  densityButton.addEventListener("click", () => {
+    compact = !compact;
+    apply();
+  });
+  root.prepend(toolbar);
+  apply();
+  if (getReport) {
+    const report = document.createElement("button");
+    report.type = "button";
+    report.className = "rf-control";
+    report.textContent = "\u041E\u0442\u0447\u0451\u0442 \u0434\u043B\u044F \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0438";
+    report.title = "\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0435\u0440\u0441\u0438\u0438 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u043E\u043A \u0431\u0435\u0437 \u0441\u0441\u044B\u043B\u043E\u043A \u043F\u0440\u043E\u043A\u0441\u0438, \u043F\u0430\u0440\u043E\u043B\u0435\u0439 \u0438 \u0436\u0443\u0440\u043D\u0430\u043B\u043E\u0432";
+    report.addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(getReport(), null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "routeflow-support.json";
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1e3);
+    });
+    controls.append(report);
+  }
+  const dashboard = root.querySelector(".fkp_dashboard-page");
+  if (!dashboard) return;
+  const search = document.createElement("div");
+  search.className = "rf-search";
+  const input = document.createElement("input");
+  input.type = "search";
+  input.placeholder = "\u041D\u0430\u0439\u0442\u0438 \u0443\u0437\u0435\u043B: \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435, \u0441\u0442\u0440\u0430\u043D\u0430, \u043F\u0440\u043E\u0442\u043E\u043A\u043E\u043B\u2026";
+  input.setAttribute("aria-label", "\u041F\u043E\u0438\u0441\u043A \u0443\u0437\u043B\u043E\u0432");
+  const count = document.createElement("span");
+  const favoriteFilter = document.createElement("button");
+  favoriteFilter.type = "button";
+  favoriteFilter.className = "rf-control";
+  favoriteFilter.textContent = "\u0422\u043E\u043B\u044C\u043A\u043E \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u044B\u0435";
+  favoriteFilter.setAttribute("aria-pressed", "false");
+  const sort = document.createElement("select");
+  sort.className = "rf-control";
+  sort.setAttribute("aria-label", "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430 \u0443\u0437\u043B\u043E\u0432");
+  sort.innerHTML = '<option value="original">\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043F\u043E\u0434\u043F\u0438\u0441\u043A\u0438</option><option value="latency">\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0431\u044B\u0441\u0442\u0440\u044B\u0435</option>';
+  const favoriteKey = "routeflow.favorites.v1";
+  let favorites = /* @__PURE__ */ new Set();
+  try {
+    const saved = JSON.parse(localStorage.getItem(favoriteKey) ?? "[]");
+    if (Array.isArray(saved)) favorites = new Set(saved.filter((item) => typeof item === "string"));
+  } catch {
+  }
+  let onlyFavorites = false;
+  const update = () => {
+    filterNodes(dashboard, input.value);
+    const nodes = [...dashboard.querySelectorAll(nodeSelector)];
+    nodes.forEach((node) => {
+      const key = node.dataset.rfKey ?? node.querySelector("b")?.textContent ?? "";
+      const favorite = favorites.has(key);
+      let button = node.querySelector(".rf-favorite");
+      if (!button) {
+        button = document.createElement("button");
+        button.type = "button";
+        button.className = "rf-favorite";
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          if (favorites.has(key)) favorites.delete(key);
+          else favorites.add(key);
+          try {
+            localStorage.setItem(favoriteKey, JSON.stringify([...favorites]));
+          } catch {
+          }
+          update();
+        });
+        node.append(button);
+      }
+      const label = favorite ? "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435";
+      button.setAttribute("aria-label", label);
+      button.title = label;
+      button.setAttribute("aria-pressed", String(favorite));
+      if (button.textContent !== (favorite ? "\u2605" : "\u2606")) button.textContent = favorite ? "\u2605" : "\u2606";
+      if (onlyFavorites && !favorite) node.classList.add("rf-search-hidden");
+    });
+    dashboard.querySelectorAll(".fkp_dashboard-page__outbound-grid").forEach((grid) => {
+      const children = [...grid.querySelectorAll(nodeSelector)];
+      children.forEach((node, index) => {
+        if (node.dataset.rfOriginal === void 0) node.dataset.rfOriginal = String(index);
+      });
+      const original = (node) => Number(node.dataset.rfOriginal);
+      const latency = (node) => {
+        const value = Number(node.dataset.rfLatency);
+        return Number.isFinite(value) && value > 0 ? value : Infinity;
+      };
+      const ordered = [...children].sort((a, b) => sort.value === "latency" ? latency(a) - latency(b) || original(a) - original(b) : original(a) - original(b));
+      if (ordered.some((node, index) => node !== children[index])) ordered.forEach((node) => grid.append(node));
+    });
+    const visible = nodes.filter((node) => !node.classList.contains("rf-search-hidden")).length;
+    const text = input.value.trim() || onlyFavorites ? `\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0443\u0437\u043B\u043E\u0432: ${visible}` : "";
+    if (count.textContent !== text) count.textContent = text;
+  };
+  search.append(input, favoriteFilter, sort, count);
+  dashboard.prepend(search);
+  input.addEventListener("input", update);
+  favoriteFilter.addEventListener("click", (event) => {
+    event.preventDefault();
+    onlyFavorites = !onlyFavorites;
+    favoriteFilter.setAttribute("aria-pressed", String(onlyFavorites));
+    update();
+  });
+  sort.addEventListener("change", update);
+  const observer = new MutationObserver((records) => {
+    if (records.some((record) => !search.contains(record.target))) update();
+  });
+  observer.observe(dashboard, { childList: true, subtree: true, characterData: true });
+  update();
+  const cleanup = new MutationObserver(() => {
+    if (!root.isConnected || !dashboard.isConnected) {
+      observer.disconnect();
+      cleanup.disconnect();
+    }
+  });
+  cleanupHandlers.set(root, () => {
+    observer.disconnect();
+    cleanup.disconnect();
+  });
+  cleanup.observe(document.body, { childList: true, subtree: true });
+}
+
+// src/routeflow/report.ts
+function createSupportReport(state) {
+  const info = state.diagnosticsSystemInfo;
+  return {
+    schema: "routeflow.support.v1",
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    versions: {
+      openwrt: info.openwrt_version,
+      forkop: info.forkop_version,
+      luci: info.luci_app_version,
+      singbox: info.sing_box_version
+    },
+    services: {
+      loaded: !state.servicesInfoWidget.loading && !state.servicesInfoWidget.failed,
+      forkopRunning: state.servicesInfoWidget.data.forkopRunning === 1,
+      singboxRunning: state.servicesInfoWidget.data.singbox === 1
+    },
+    diagnostics: state.diagnosticsChecks.map((check, index) => ({
+      check: index + 1,
+      state: check.state,
+      results: check.items.map((item) => item.state)
+    })),
+    nodes: {
+      loaded: !state.sectionsWidget.loading && !state.sectionsWidget.failed,
+      groups: state.sectionsWidget.data.length,
+      total: state.sectionsWidget.data.reduce((sum, group) => sum + group.outbounds.length, 0),
+      measured: state.sectionsWidget.data.flatMap((group) => group.outbounds).filter((node) => Number.isFinite(node.latency) && node.latency > 0).length
+    }
+  };
 }
 
 // src/main.ts
@@ -14137,6 +14426,8 @@ return baseclass.extend({
   applyUiStateToStore,
   bulkValidate,
   coreService,
+  createSupportReport,
+  enhanceRouteflow,
   getClashUIUrl,
   getProxyUrlName,
   injectGlobalStyles,

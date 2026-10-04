@@ -322,6 +322,8 @@ function renderDefaultState({
       'div',
       {
         class: className,
+        'data-rf-key': JSON.stringify([section.code, outbound.code]),
+        'data-rf-latency': outbound.latency || '',
         'aria-busy': outboundSwitching ? 'true' : undefined,
         'aria-disabled':
           section.withTagSelect && !canChooseOutbound ? 'true' : undefined,

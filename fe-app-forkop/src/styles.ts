@@ -5,6 +5,7 @@ import { MonitoringTab } from './forkop/tabs/monitoring';
 import { UpdatesTab } from './forkop/tabs/updates';
 import { PartialStyles } from './partials';
 import { FORKOP_UCI_PACKAGE as FORKOP_CBI_PREFIX } from './constants';
+import { RouteflowStyles } from './routeflow/styles';
 
 export const GlobalStyles = `
 ${DashboardTab.styles}
@@ -163,4 +164,5 @@ ${PartialStyles}
     opacity: 1;
     transform: translateY(0);
 }
+${RouteflowStyles}
 `;

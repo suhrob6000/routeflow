@@ -19,6 +19,8 @@ export { validateProxyUrl } from './validators/validateProxyUrl';
 export { parseValueList } from './helpers/parseValueList';
 export { getProxyUrlName } from './helpers/getProxyUrlName';
 export { injectGlobalStyles } from './helpers/injectGlobalStyles';
+export { enhanceRouteflow } from './routeflow/enhance';
+export { createSupportReport } from './routeflow/report';
 export { showToast } from './helpers/showToast';
 export { getClashUIUrl } from './helpers/getClashApiUrl';
 export { ForkopShellMethods } from './forkop/methods/shell';

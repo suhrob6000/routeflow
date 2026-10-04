@@ -1,8 +1,9 @@
 #!/bin/sh
 # shellcheck shell=dash
 
-REPO_OWNER="ushan0v"
-REPO_NAME="forkop"
+REPO_OWNER="suhrob6000"
+REPO_NAME="routeflow"
+ROUTEFLOW_VERSION="${ROUTEFLOW_VERSION:-1.0.0}"
 
 REQUIRED_SPACE_KB=15360
 CONNECT_TIMEOUT_SECONDS=15
@@ -1690,6 +1691,9 @@ fetch_github_latest_release_json() {
     response=""
     message=""
     url="https://api.github.com/repos/${owner}/${repo}/releases/latest"
+    if [ "$owner/$repo" = "suhrob6000/routeflow" ]; then
+        url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${ROUTEFLOW_VERSION}"
+    fi
 
     response="$(http_get "$url" 2>/dev/null || true)"
     [ -n "$response" ] || fail "Failed to query GitHub latest release metadata for ${owner}/${repo}"
@@ -1911,6 +1915,32 @@ download_forkop_packages() {
     fi
 }
 
+verify_routeflow_packages() {
+    command_exists sha256sum || fail "sha256sum is required to verify Routeflow packages"
+    sums="$TMP_DIR/SHA256SUMS"
+    sums_url="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${FORKOP_RELEASE_TAG}/SHA256SUMS"
+    download_with_retry "$sums_url" "$sums" "SHA256SUMS" || fail "Failed to download package checksums"
+    for package_file in "$FORKOP_BACKEND_FILE" "$FORKOP_APP_FILE" "$FORKOP_I18N_FILE"; do
+        [ -n "$package_file" ] || continue
+        package_name="$(basename "$package_file")"
+        expected="$(awk -v name="$package_name" '$2 == name { print $1 }' "$sums")"
+        actual="$(sha256sum "$package_file" | cut -d ' ' -f 1)"
+        [ -n "$expected" ] && [ "$expected" = "$actual" ] || fail "Checksum mismatch: $package_name"
+    done
+}
+
+backup_routeflow_config() (
+    umask 077
+    backup_dir="/etc/routeflow/backups/$(date +%Y%m%d-%H%M%S)-$$"
+    mkdir -p "$backup_dir" || fail "Failed to create Routeflow config backup"
+    for config_name in forkop sing-box dhcp; do
+        if [ -f "/etc/config/$config_name" ]; then
+            cp "/etc/config/$config_name" "$backup_dir/$config_name" || fail "Failed to back up $config_name"
+        fi
+    done
+    msg "Configuration backup: $backup_dir (root access only)"
+)
+
 install_backend_package() {
     pkg_install_files "$FORKOP_BACKEND_FILE" || fail "forkop installation failed"
 }
@@ -1975,6 +2005,8 @@ main() {
 
     resolve_forkop_release
     download_forkop_packages
+    verify_routeflow_packages
+    backup_routeflow_config
 
     cleanup_legacy_installation
     install_backend_package
@@ -1983,7 +2015,7 @@ main() {
     install_selected_sing_box
     post_install
 
-    msg "Forkop $FORKOP_PACKAGE_VERSION has been installed successfully"
+    msg "Routeflow $FORKOP_PACKAGE_VERSION has been installed successfully"
     msg "Source release: ${REPO_OWNER}/${REPO_NAME}@${FORKOP_RELEASE_TAG}"
     warn "Open LuCI and review your rules before enabling Forkop"
 }
