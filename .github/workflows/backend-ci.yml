@@ -56,4 +56,6 @@ jobs:
       - name: Run backend tests
         shell: bash
         run: |
+          # Contract tests compare against the original Forkop stable release.
+          git fetch https://github.com/ushan0v/forkop.git refs/tags/0.7.19.9:refs/tags/0.7.19.9
           printf '%s\0' tests/*.sh | xargs -0 -n1 -P4 bash
