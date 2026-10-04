@@ -117,5 +117,4 @@ jobs:
           make_latest: false
           name: Routeflow ${{ needs.preparation.outputs.version }} — preview
           tag_name: ${{ needs.preparation.outputs.version }}
-          target_commitish: ${{ needs.preparation.outputs.commitish }}
           body: ${{ needs.preparation.outputs.release_notes }}

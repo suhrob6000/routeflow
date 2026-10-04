@@ -9,6 +9,7 @@ if grep -Fiq 'sourceforge' "$workflow"; then
 fi
 
 grep -Fq 'uses: softprops/action-gh-release@v2.4.0' "$workflow"
-grep -Fq 'files: ./filtered-bin/release/*.*' "$workflow"
+grep -Fq 'files: ./filtered-bin/release/*' "$workflow"
+grep -Fq 'sha256sum *.apk *.ipk > SHA256SUMS' "$workflow"
 
 printf 'release workflow checks passed\n'
